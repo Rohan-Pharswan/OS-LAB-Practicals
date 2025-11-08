@@ -1,23 +1,42 @@
-def best_fit(blocks, processes):
-    allocation = [-1] * len(processes)
-    for i in range(len(processes)):
-        best_idx = -1
-        for j in range(len(blocks)):
-            if blocks[j] >= processes[i]:
-                if best_idx == -1 or blocks[j] < blocks[best_idx]:
-                    best_idx = j
-        if best_idx != -1:
-            allocation[i] = best_idx
-            blocks[best_idx] -= processes[i]
-    print("\nProcess No.\tProcess Size\tBlock No.")
-    for i in range(len(processes)):
-        if allocation[i] != -1:
-            print(f"{i+1}\t\t{processes[i]}\t\t{allocation[i]+1}")
-        else:
-            print(f"{i+1}\t\t{processes[i]}\t\tNot Allocated")
+#include <stdio.h>
 
-blocks = [100, 500, 200, 300, 600]
-processes = [212, 417, 112, 426]
+int main() {
+    int i, j, nb, np;
+    printf("Enter number of blocks: ");
+    scanf("%d", &nb);
+    int b[nb];
+    printf("Enter size of each block:\n");
+    for (i = 0; i < nb; i++) scanf("%d", &b[i]);
 
-print("---- Best Fit ----")
-best_fit(blocks[:], processes)
+    printf("Enter number of processes: ");
+    scanf("%d", &np);
+    int p[np], allocation[np];
+    printf("Enter size of each process:\n");
+    for (i = 0; i < np; i++) {
+        scanf("%d", &p[i]);
+        allocation[i] = -1;
+    }
+
+    for (i = 0; i < np; i++) {
+        int best = -1;
+        for (j = 0; j < nb; j++) {
+            if (b[j] >= p[i]) {
+                if (best == -1 || b[j] < b[best])
+                    best = j;
+            }
+        }
+        if (best != -1) {
+            allocation[i] = best;
+            b[best] -= p[i];
+        }
+    }
+
+    printf("\nProcess No.\tProcess Size\tBlock No.\n");
+    for (i = 0; i < np; i++) {
+        if (allocation[i] != -1)
+            printf("%d\t\t%d\t\t%d\n", i + 1, p[i], allocation[i] + 1);
+        else
+            printf("%d\t\t%d\t\tNot Allocated\n", i + 1, p[i]);
+    }
+    return 0;
+}
